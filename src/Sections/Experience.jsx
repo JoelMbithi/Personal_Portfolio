@@ -3,16 +3,18 @@ import React from 'react'
 export const Experience = () => {
   const experiences = [
     {
-      role: 'Job Title',
-      company: 'Company Name',
-      duration: 'Jan 2022 - Present',
-      description: 'Brief description of your responsibilities and achievements in this role.'
+      role: 'Freelance Full Stack Developer',
+      company: 'Self-Employed',
+      duration: 'Jan 2022 – Present',
+      description:
+        'Built and delivered high-quality web applications for clients across various industries. Specialized in MERN/PERN stack solutions, handling both frontend and backend development, integrating APIs, managing databases, and deploying applications on cloud platforms like Vercel and Render.'
     },
     {
-      role: 'Job Title',
-      company: 'Company Name',
-      duration: 'Mar 2020 - Dec 2021',
-      description: 'Brief description of your responsibilities and achievements in this role.'
+      role: 'Junior Web Developer (Freelance)',
+      company: 'Independent Projects',
+      duration: 'Mar 2020 – Dec 2021',
+      description:
+        'Worked on several personal and client-side projects to improve hands-on experience with JavaScript, React, and Node.js. Created responsive interfaces, RESTful APIs, and contributed to open-source projects while learning modern development practices.'
     }
   ]
 
@@ -25,11 +27,11 @@ export const Experience = () => {
       <div className="space-y-8">
         {experiences.map((exp, index) => (
           <div key={index} className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-            <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
+            <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-2">
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{exp.role}</h3>
               <span className="text-gray-500 dark:text-gray-400">{exp.duration}</span>
             </div>
-            <h4 className="text-lg text-blue-600 dark:text-blue-400 mb-4">{exp.company}</h4>
+            <h4 className="text-lg text-blue-600 dark:text-blue-400 mb-2">{exp.company}</h4>
             <p className="text-gray-600 dark:text-gray-300">{exp.description}</p>
           </div>
         ))}
