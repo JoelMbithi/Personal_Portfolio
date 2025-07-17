@@ -4,6 +4,8 @@ import ProjectCard from "../components/Project/ProjectCard"
 import buildEstateImg from '../assets/buildEstateImg.jpeg'
 import joeGigsImg from '../assets/joeGigsImg.jpeg'
 import quickCartImg from '../assets/quickCartImg.jpeg'
+import Blog from "../assets/Blog.png"
+import Employee from "../assets/Employee.jpeg"
 export const Projects = () => {
 const projects = [
   {
@@ -14,8 +16,16 @@ const projects = [
     github: "https://github.com/JoelMbithi/Build-Estate-Website",
     image: buildEstateImg
   },
-  {
-    title: "Joe Gigs Website",
+ {
+  title: "Blog",
+  description: "A clean and professional Django blog platform for writing and managing posts.",
+  tags: ["Python", "Django", "Tailwind CSS"],
+  link: "",
+  github: "https://github.com/JoelMbithi/scribe-django.git",
+  image: Blog
+},
+    {
+    title: "Joe Website",
     description: "Freelance gig platform with features for managing jobs and payments.",
     tags: ["React", "MongoDB", "Tailwind CSS"],
     link: "https://full-stack-dev-jx3r.vercel.app/",
@@ -29,7 +39,16 @@ const projects = [
     link: "https://joe-devhub-xl5x.vercel.app/",
     github: "https://github.com/JoelMbithi/QuickCart",
     image: quickCartImg
-  }
+  },
+  {
+  title: "Employee Management System",
+  description: "A full-featured Django application for managing employees with CRUD operations and responsive Tailwind UI.",
+  tags: ["Python", "Django", "Tailwind CSS", "PostgreSQL"],
+  link: "",
+  github: "https://github.com/JoelMbithi/scribe-django",
+  image: Employee
+}
+
 ]
 
 
