@@ -1,94 +1,303 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import image from '../assets/image.jpeg';
 import { FiDownload } from 'react-icons/fi';
-import Search from '../components/Home/Search';
+import { useNavigate } from 'react-router-dom';
+import image from '../assets/image.jpeg';
 
 export const Hero = () => {
+  const navigate = useNavigate();
+  const ACCENT = '#4ade80';
+
   return (
-    <section
-      id="home"
-      className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto  overflow-hidden"
-    >
-      {/* Search Bar with Animation */}
-     <Search/>
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
-      {/* Hero Content */}
-      <div className="text-center md:text-left md:flex items-center justify-between">
-        {/* Text Section */}
-        <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1 }}
-          className="md:w-1/2"
-        >
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-4">
-            Hi, I'm <span className="text-blue-600">Joe Mbithi</span>
-          </h1>
-          <h2 className="text-2xl md:text-3xl text-gray-600 dark:text-gray-300 mb-6">
-            Full Stack Developer | Build. Solve. Deliver.
-          </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-lg">
-            A passionate Full-stack developer specializing in scalable web applications using the MERN and PERN stacks. I build clean, responsive interfaces and robust backends with a focus on performance, reliability, and user-centric design.
-          </p>
+        .hero-root {
+          font-family: 'Epilogue', sans-serif;
+          color: #e5e5e5;
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          padding: 0 40px;
+          position: relative;
+          overflow: hidden;
+        }
+        @media(max-width:640px){ .hero-root { padding: 96px 20px 60px; } }
 
-          {/* Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-            <a
-              href="#contact"
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Contact Me
-            </a>
-            <a
-              href="#projects"
-              className="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-            >
-              View My Work
-            </a>
-            <a
-              href="/JOEL MBITHI MUTUKU.pdf"
-              download
-              className="px-6 py-3 flex items-center gap-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-            >
-              <FiDownload />
-              Download CV
-            </a>
+          /* subtle grid texture */
+          /* floating hexagons */
+.hero-root::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 L47.5 17.5 L47.5 42.5 L30 55 L12.5 42.5 L12.5 17.5 L30 5' fill='none' stroke='%23c8f04d' stroke-width='0.5' stroke-opacity='0.1' /%3E%3C/svg%3E");
+  background-size: 80px 80px;
+  opacity: 0.4;
+  pointer-events: none;
+  animation: floatHexagons 40s linear infinite;
+}
+
+@keyframes floatHexagons {
+  0% { background-position: 0 0; }
+  100% { background-position: 80px 80px; }
+}
+        .hero-inner {
+          max-width: 1400px;
+          margin: 0 auto;
+          width: 100%;
+          display: grid;
+          grid-template-columns: 1fr 400px;
+          gap: 80px;
+          align-items: center;
+          position: relative;
+          z-index: 1;
+          padding: 120px 0 100px;
+        }
+        @media(max-width:900px){
+          .hero-inner {
+            grid-template-columns: 1fr;
+            gap: 56px;
+            padding: 80px 0 80px;
+          }
+        }
+
+        /* ── LEFT ── */
+        .hero-eyebrow {
+          display: flex; align-items: center; gap: 12px;
+          margin-bottom: 24px;
+        }
+        .hero-eyebrow-line { width: 32px; height: 1px; background: ${ACCENT}; }
+        .hero-eyebrow-text {
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 11px; letter-spacing: 0.2em;
+          text-transform: uppercase; color: ${ACCENT};
+        }
+
+        .hero-name {
+          font-size: clamp(44px, 6vw, 80px);
+          font-weight: 800; line-height: 0.95;
+          letter-spacing: -0.04em;
+          color: #ffffff;
+          margin-bottom: 16px;
+        }
+        .hero-name span {
+          color: ${ACCENT};
+          display: block;
+        }
+
+        .hero-role {
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 13px; letter-spacing: 0.1em;
+          color: #888; margin-bottom: 28px;
+          text-transform: uppercase;
+        }
+
+        .hero-desc {
+          font-size: 15px; font-weight: 300;
+          line-height: 1.85; color: #b0b0b0;
+          max-width: 460px; margin-bottom: 48px;
+          border-left: 2px solid #404040;
+          padding-left: 20px;
+        }
+
+        /* ── BUTTONS ── */
+        .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+        .btn-primary {
+          padding: 13px 28px;
+          background: ${ACCENT}; color: #0b0b0b;
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 11px; font-weight: 500;
+          letter-spacing: 0.12em; text-transform: uppercase;
+          border: none; cursor: pointer; text-decoration: none;
+          display: inline-block;
+          transition: opacity .2s, transform .2s;
+        }
+        .btn-primary:hover { opacity: .85; transform: translateY(-1px); }
+
+        .btn-outline {
+          padding: 13px 28px;
+          background: transparent; color: #b0b0b0;
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 11px; letter-spacing: 0.12em;
+          text-transform: uppercase;
+          border: 1px solid #404040; cursor: pointer;
+          text-decoration: none; display: inline-block;
+          transition: color .15s, border-color .15s, transform .2s;
+        }
+        .btn-outline:hover { color: #ffffff; border-color: #666; transform: translateY(-1px); }
+
+        .btn-cv {
+          padding: 13px 28px;
+          background: transparent; color: #888;
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 11px; letter-spacing: 0.12em;
+          text-transform: uppercase;
+          border: 1px solid #404040; cursor: pointer;
+          text-decoration: none; display: inline-flex;
+          align-items: center; gap: 8px;
+          transition: color .15s, border-color .15s, transform .2s;
+        }
+        .btn-cv:hover { color: ${ACCENT}; border-color: #666; transform: translateY(-1px); }
+
+        /* ── RIGHT: PHOTO ── */
+        .hero-photo-wrap {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        /* outer border frame */
+        .hero-frame {
+          position: relative;
+          width: 340px; height: 360px;
+          flex-shrink: 0;
+        }
+        @media(max-width:900px){ .hero-frame { width: 220px; height: 220px; } }
+
+        /* corner brackets */
+        .hero-frame::before,
+        .hero-frame::after {
+          content: '';
+          position: absolute;
+          width: 32px; height: 32px;
+          z-index: 2;
+        }
+        .hero-frame::before {
+          top: -8px; left: -8px;
+          border-top: 2px solid ${ACCENT};
+          border-left: 2px solid ${ACCENT};
+        }
+        .hero-frame::after {
+          bottom: -8px; right: -8px;
+          border-bottom: 2px solid ${ACCENT};
+          border-right: 2px solid ${ACCENT};
+        }
+
+        .hero-frame-inner {
+          position: relative;
+          width: 100%; height: 100%;
+          overflow: hidden;
+        }
+        /* two more corners via a child */
+        .hero-frame-inner::before,
+        .hero-frame-inner::after {
+          content: '';
+          position: absolute;
+          width: 32px; height: 32px;
+          z-index: 2;
+        }
+        .hero-frame-inner::before {
+          top: -8px; right: -8px;
+          border-top: 2px solid ${ACCENT};
+          border-right: 2px solid ${ACCENT};
+        }
+        .hero-frame-inner::after {
+          bottom: -8px; left: -8px;
+          border-bottom: 2px solid ${ACCENT};
+          border-left: 2px solid ${ACCENT};
+        }
+
+        .hero-img {
+          width: 100%; height: 140%;
+          object-fit: cover;
+          display: block;
+          filter: grayscale(30%);
+          transition: filter .3s;
+        }
+        .hero-frame:hover .hero-img { filter: grayscale(0%); }
+
+        /* label tag */
+        .hero-tag {
+          position: absolute;
+          bottom: -20px; left: -16px;
+          background: #1a1a1a;
+          border: 1px solid #404040;
+          padding: 8px 14px;
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 10px; letter-spacing: 0.14em;
+          text-transform: uppercase; color: #b0b0b0;
+          white-space: nowrap;
+          z-index: 3;
+        }
+        .hero-tag span { color: ${ACCENT}; margin-right: 4px; }
+
+        /* ── SCROLL HINT ── */
+        .hero-scroll {
+          position: absolute;
+          bottom: 36px; left: 50%;
+          transform: translateX(-50%);
+          display: flex; flex-direction: column;
+          align-items: center; gap: 8px;
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 9px; letter-spacing: 0.2em;
+          text-transform: uppercase; color: #555;
+          z-index: 1;
+        }
+        .hero-scroll-line {
+          width: 1px; height: 48px;
+          background: linear-gradient(to bottom, #666, transparent);
+          animation: scroll-drop 2s ease-in-out infinite;
+        }
+        @keyframes scroll-drop {
+          0%,100% { opacity: .3; transform: scaleY(1); }
+          50%      { opacity: 1;  transform: scaleY(0.6) translateY(8px); }
+        }
+      `}</style>
+
+      <section id="home" className="hero-root">
+        <div className="hero-inner">
+
+          {/* Left */}
+          <div>
+            <div className="hero-eyebrow">
+              <div className="hero-eyebrow-line" />
+              <span className="hero-eyebrow-text">Full Stack Developer</span>
+            </div>
+
+            <h1 className="hero-name">
+              Joel<span>Mbithi.</span>
+            </h1>
+
+            <div className="hero-role">Build · Solve · Deliver</div>
+
+            <p className="hero-desc">
+              Specialising in scalable web applications with the MERN and PERN stacks.
+              Clean interfaces, robust backends, and a relentless focus on performance
+              and user experience.
+            </p>
+
+            <div className="hero-actions">
+              <button className="btn-primary" onClick={() => navigate('/contact')}>Contact Me</button>
+              <button className="btn-outline" onClick={() => navigate('/projects')}>View Work</button>
+              <a href="/JOEL MBITHI MUTUKU.pdf" download className="btn-cv">
+                <FiDownload size={12} /> Download CV
+              </a>
+            </div>
           </div>
-        </motion.div>
 
-        {/* Image Section */}
-        <motion.div
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1 }}
-          className="hidden md:block md:w-1/2 mt-10 md:mt-0"
-        >
-          <div className="relative mx-auto w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96">
-            {/* Light reflection gradient */}
-            <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent rounded-full blur-[30px] z-0"></div>
-
-            {/* Profile image container */}
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              transition={{ type: 'spring', stiffness: 200 }}
-              className="relative z-10 w-full h-full"
-            >
-              <img
-                src={image}
-                alt="Joe Mbithi"
-                className="w-full h-full rounded-full object-cover border border-blue-300 dark:border-blue-500 shadow-xl"
-              />
-              <div className="absolute -inset-2 rounded-full bg-white/10 blur-xl pointer-events-none"></div>
-            </motion.div>
-
-            {/* Floating animated dots */}
-            <div className="absolute top-1/4 left-1/4 w-2 h-2 rounded-full bg-white/80 animate-pulse"></div>
-            <div className="absolute bottom-1/3 right-1/3 w-1.5 h-1.5 rounded-full bg-white/60 animate-pulse delay-300"></div>
+          {/* Right */}
+          <div className="hero-photo-wrap">
+            <div className="hero-frame">
+              <div className="hero-frame-inner">
+                <img src={image} alt="Joel Mbithi" className="hero-img" />
+              </div>
+              <div className="hero-tag">
+                <span>✦</span> Available for work
+              </div>
+            </div>
           </div>
-        </motion.div>
-      </div>
-    </section>
+
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="hero-scroll">
+          <span>FullStack Developer</span>
+          <div className="hero-scroll-line" />
+        </div>
+      </section>
+    </>
   );
 };
 

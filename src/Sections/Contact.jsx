@@ -1,590 +1,379 @@
-import React, { useState, useRef, useCallback } from 'react';
-import { motion, useInView, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { FaPaperPlane, FaMapMarkerAlt, FaPhone, FaEnvelope, FaLinkedin, FaGithub, FaTwitter, FaCheck, FaRocket } from 'react-icons/fa';
+import React, { useState, useCallback } from 'react';
+import { FaPaperPlane, FaMapMarkerAlt, FaPhone, FaEnvelope, FaLinkedin, FaGithub, FaTwitter, FaCheck } from 'react-icons/fa';
 
-// Memoized InputField with stable props
-const InputField = React.memo(({ label, name, type = "text", required = true, textarea = false, value, onChange }) => (
-  <div className="relative">
-    <label htmlFor={name} className="block text-sm font-medium text-white mb-2">
-      {label} {required && <span className="text-red-400">*</span>}
+/* ─── DATA ───────────────────────────────────────────── */
+const CONTACT_INFO = [
+  { icon: <FaMapMarkerAlt />, label: 'Location',  value: 'Nairobi, Kenya',          note: 'Available for remote work worldwide' },
+  { icon: <FaEnvelope />,     label: 'Email',     value: 'joellembithi@gmail.com',  note: 'Responds within 24 hours' },
+  { icon: <FaPhone />,        label: 'Phone',     value: '+254 743 861 565',         note: 'Mon – Fri, 8am – 6pm EAT' },
+];
+
+const SOCIALS = [
+  { icon: <FaLinkedin />, label: 'LinkedIn', url: 'https://linkedin.com/in/joelmbithi' },
+  { icon: <FaGithub />,   label: 'GitHub',   url: 'https://github.com/joelmbithi' },
+  { icon: <FaTwitter />,  label: 'Twitter',  url: 'https://twitter.com/joelmbithi' },
+];
+
+/* ─── FIELD ──────────────────────────────────────────── */
+const Field = ({ label, name, type = 'text', textarea = false, value, onChange, required = true }) => (
+  <div className="cf-field">
+    <label htmlFor={name} className="cf-label">
+      {label}{required && <span className="cf-req"> *</span>}
     </label>
-    {textarea ? (
-      <textarea
-        id={name}
-        name={name}
-        rows="4"
-        required={required}
-        value={value}
-        onChange={onChange}
-        className="w-full px-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-gray-400 transition-colors duration-300 resize-none"
-        placeholder={`Enter your ${label.toLowerCase()}...`}
-      />
-    ) : (
-      <input
-        type={type}
-        id={name}
-        name={name}
-        required={required}
-        value={value}
-        onChange={onChange}
-        className="w-full px-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-gray-400 transition-colors duration-300"
-        placeholder={`Enter your ${label.toLowerCase()}...`}
-      />
-    )}
-  </div>
-));
-
-// Static ContactForm component (not wrapped in motion)
-const ContactForm = ({ onSubmit, isSubmitting, status, formData, handleChange }) => (
-  <div className="lg:col-span-2">
-    <form
-      onSubmit={onSubmit}
-      className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 space-y-6"
-    >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <InputField label="Name" name="name" value={formData.name} onChange={handleChange} />
-        <InputField label="Email" name="email" type="email" value={formData.email} onChange={handleChange} />
-      </div>
-
-      <InputField label="Subject" name="subject" value={formData.subject} onChange={handleChange} />
-      <InputField label="Message" name="message" textarea={true} value={formData.message} onChange={handleChange} />
-
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="w-full py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg font-semibold hover:shadow-2xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden"
-      >
-        <div className="flex items-center justify-center space-x-2">
-          <FaPaperPlane className="transition-transform duration-300" />
-          <span>{isSubmitting ? 'Sending...' : 'Send Message'}</span>
-        </div>
-
-        {isSubmitting && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
-          </div>
-        )}
-      </button>
-
-      {status === 'ERROR' && (
-        <p className="text-red-400 font-medium text-center p-3 bg-red-400/10 rounded-lg border border-red-400/20">
-          Oops! Something went wrong. Please try again.
-        </p>
-      )}
-    </form>
+    {textarea
+      ? <textarea id={name} name={name} rows={5} required={required} value={value} onChange={onChange} placeholder={`Your ${label.toLowerCase()}…`} className="cf-input cf-textarea" />
+      : <input id={name} name={name} type={type} required={required} value={value} onChange={onChange} placeholder={`Your ${label.toLowerCase()}…`} className="cf-input" />
+    }
   </div>
 );
 
-// Enhanced FloatingElements with more animations
-const FloatingElements = () => {
-  const elements = [
-    { icon: <FaPaperPlane />, delay: 0, size: "text-4xl" },
-    { icon: <FaEnvelope />, delay: 1, size: "text-3xl" },
-    { icon: <FaRocket />, delay: 2, size: "text-5xl" },
-    { icon: <FaMapMarkerAlt />, delay: 3, size: "text-3xl" },
-    { icon: <FaPhone />, delay: 4, size: "text-4xl" },
-  ];
-
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {elements.map((element, index) => (
-        <motion.div
-          key={index}
-          className={`absolute ${element.size} text-white/10`}
-          style={{
-            left: `${10 + index * 20}%`,
-            top: `${15 + (index % 3) * 25}%`,
-          }}
-          animate={{
-            y: [0, -50, 0],
-            x: [0, Math.sin(index) * 20, 0],
-            rotate: [0, 180, 360],
-            opacity: [0.05, 0.15, 0.05],
-            scale: [1, 1.2, 1],
-          }}
-          transition={{
-            duration: 10 + element.delay,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: element.delay * 2,
-          }}
-        >
-          {element.icon}
-        </motion.div>
-      ))}
-    </div>
-  );
-};
-
-// Background gradient orbs with animation
-const AnimatedBackgroundOrbs = () => (
-  <>
-    <motion.div
-      className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"
-      animate={{
-        scale: [1, 1.2, 1],
-        opacity: [0.1, 0.2, 0.1],
-      }}
-      transition={{
-        duration: 8,
-        repeat: Infinity,
-        ease: "easeInOut",
-      }}
-    />
-    <motion.div
-      className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"
-      animate={{
-        scale: [1.2, 1, 1.2],
-        opacity: [0.2, 0.1, 0.2],
-      }}
-      transition={{
-        duration: 10,
-        repeat: Infinity,
-        ease: "easeInOut",
-      }}
-    />
-    <motion.div
-      className="absolute top-3/4 left-1/3 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl"
-      animate={{
-        scale: [1, 1.3, 1],
-        opacity: [0.05, 0.15, 0.05],
-      }}
-      transition={{
-        duration: 12,
-        repeat: Infinity,
-        ease: "easeInOut",
-      }}
-    />
-  </>
-);
-
+/* ─── MAIN ───────────────────────────────────────────── */
 export const Contact = () => {
-  const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: false, margin: "-100px" });
-  
-  // Scroll animations only for visual elements, not for form
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"]
-  });
+  const ACCENT = '#4ade80';
 
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.8, 1, 1, 0.8]);
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
+  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
+  const [status, setStatus]     = useState(''); // '' | 'sending' | 'success' | 'error'
 
-  const [status, setStatus] = useState('');
-  const [showModal, setShowModal] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  });
-
-  const contactInfo = [
-    {
-      icon: <FaMapMarkerAlt className="text-2xl" />,
-      title: "Location",
-      value: "Nairobi, Kenya",
-      description: "Available for remote work worldwide",
-      color: "from-red-500 to-pink-500"
-    },
-    {
-      icon: <FaEnvelope className="text-2xl" />,
-      title: "Email",
-      value: "joellembithi@gmail.com",
-      description: "I'll respond within 24 hours",
-      color: "from-blue-500 to-cyan-500"
-    },
-    {
-      icon: <FaPhone className="text-2xl" />,
-      title: "Phone",
-      value: "+254 743 861 565",
-      description: "24 hours",
-      color: "from-green-500 to-emerald-500"
-    }
-  ];
-
-  const socialLinks = [
-    {
-      icon: <FaLinkedin />,
-      name: "LinkedIn",
-      url: "https://linkedin.com/in/joelmbithi",
-      color: "hover:bg-blue-600"
-    },
-    {
-      icon: <FaGithub />,
-      name: "GitHub",
-      url: "https://github.com/joelmbithi",
-      color: "hover:bg-gray-800"
-    },
-    {
-      icon: <FaTwitter />,
-      name: "Twitter",
-      url: "https://twitter.com/joelmbithi",
-      color: "hover:bg-cyan-500"
-    }
-  ];
-
-  const handleChange = useCallback((e) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
+  const handleChange = useCallback(e => {
+    setFormData(p => ({ ...p, [e.target.name]: e.target.value }));
   }, []);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    setIsSubmitting(true);
-
+    setStatus('sending');
     const data = new FormData();
-    data.append("name", formData.name);
-    data.append("email", formData.email);
-    data.append("subject", formData.subject);
-    data.append("message", formData.message);
-
+    Object.entries(formData).forEach(([k, v]) => data.append(k, v));
     try {
-      const response = await fetch("https://formspree.io/f/myzjpoyl", {
-        method: "POST",
-        body: data,
-        headers: {
-          Accept: "application/json",
-        },
+      const res = await fetch('https://formspree.io/f/myzjpoyl', {
+        method: 'POST', body: data, headers: { Accept: 'application/json' },
       });
-
-      if (response.ok) {
-        setStatus('SUCCESS');
-        setShowModal(true);
+      if (res.ok) {
+        setStatus('success');
         setFormData({ name: '', email: '', subject: '', message: '' });
-      } else {
-        setStatus('ERROR');
-      }
-    } catch (error) {
-      setStatus('ERROR');
-    } finally {
-      setIsSubmitting(false);
-    }
+      } else setStatus('error');
+    } catch { setStatus('error'); }
   };
 
   return (
-    <section
-      id="contact"
-      ref={sectionRef}
-      className="min-h-screen py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-gradient-to-br from-gray-900 via-black to-gray-900"
-    >
-      {/* Enhanced Background Elements */}
-      <FloatingElements />
-      <AnimatedBackgroundOrbs />
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
-      {/* Animated Container - Only for visual elements, form is separate */}
-      <motion.div
-        style={{ opacity, scale }}
-        className="relative z-10 max-w-7xl mx-auto"
-      >
-        {/* Enhanced Animated Header */}
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-        >
-          <motion.h2
-            className="text-5xl md:text-7xl font-bold text-white mb-6"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
-          >
-            Let's <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Connect</span>
-          </motion.h2>
-          <motion.div
-            className="w-32 h-1 bg-gradient-to-r from-blue-400 to-purple-500 mx-auto mb-6 rounded-full"
-            initial={{ width: 0 }}
-            animate={isInView ? { width: 128 } : {}}
-            transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
-          />
-          <motion.p
-            className="text-xl text-gray-300 max-w-3xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.7, duration: 0.6 }}
-          >
-            Ready to bring your next project to life? Let's discuss how we can create something amazing together.
-            I'm always open to new opportunities and collaborations.
-          </motion.p>
-        </motion.div>
+        .ct-root {
+          font-family: 'Epilogue', sans-serif;
+          color: #e5e5e5;
+          min-height: 100vh;
+          padding: 96px 0 120px;
+        }
+        .ct-inner {
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 0 40px;
+        }
+        @media(max-width:640px){ .ct-inner { padding: 0 20px; } }
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* Enhanced Contact Information with Animations */}
-          <motion.div
-            className="lg:col-span-1 space-y-6"
-            initial={{ opacity: 0, x: -50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ delay: 0.9, type: "spring", stiffness: 80 }}
-          >
-            <motion.div
-              className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6"
-              whileHover={{ 
-                scale: 1.02,
-                boxShadow: "0 20px 40px rgba(0,0,0,0.3)",
-                transition: { duration: 0.3 }
-              }}
-              whileTap={{ scale: 0.99 }}
-            >
-              <motion.h3 
-                className="text-2xl font-bold text-white mb-6"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1 }}
-              >
-                Get In Touch
-              </motion.h3>
-              <motion.p 
-                className="text-gray-300 mb-6"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.1 }}
-              >
-                Have a project in mind or want to discuss potential opportunities? 
-                I'd love to hear from you. Let's create something extraordinary together.
-              </motion.p>
-              
-              {/* Contact Methods */}
-              <div className="space-y-4 mb-6">
-                {contactInfo.map((item, index) => (
-                  <motion.div
-                    key={item.title}
-                    className="flex items-start space-x-4 p-3 rounded-lg hover:bg-white/5 transition-all duration-300 group"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 1.1 + index * 0.1, type: "spring" }}
-                    whileHover={{ 
-                      x: 5,
-                      backgroundColor: "rgba(255,255,255,0.05)",
-                      transition: { duration: 0.2 }
-                    }}
-                  >
-                    <motion.div
-                      className={`p-3 rounded-lg bg-gradient-to-r ${item.color} text-white group-hover:shadow-lg`}
-                      whileHover={{ 
-                        scale: 1.1, 
-                        rotate: 5,
-                        transition: { type: "spring", stiffness: 300 }
-                      }}
-                      whileTap={{ scale: 0.9 }}
-                    >
-                      {item.icon}
-                    </motion.div>
+        /* ── HEADER ── */
+        .ct-eyebrow {
+          display: flex; align-items: center; gap: 12px;
+          margin-bottom: 20px;
+        }
+        .ct-eyebrow-line { width: 32px; height: 1px; background: ${ACCENT}; }
+        .ct-eyebrow-text {
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 11px; letter-spacing: 0.2em;
+          text-transform: uppercase; color: ${ACCENT};
+        }
+        .ct-title {
+          font-size: clamp(36px, 5vw, 64px);
+          font-weight: 800; line-height: 1;
+          letter-spacing: -0.03em; color: #ffffff;
+          margin-bottom: 16px;
+        }
+        .ct-title span { color: ${ACCENT}; }
+        .ct-subtitle {
+          font-size: 15px; color: #b0b0b0;
+          line-height: 1.7; max-width: 460px;
+          margin-bottom: 64px;
+        }
+
+        /* ── GRID ── */
+        .ct-grid {
+          display: grid;
+          grid-template-columns: 320px 1fr;
+          gap: 0;
+          border: 1px solid #455;
+        }
+        @media(max-width:860px){ .ct-grid { grid-template-columns: 1fr; } }
+
+        /* ── LEFT PANEL ── */
+        .ct-left {
+          border-right: 1px solid #455;
+          padding: 40px 32px;
+          display: flex;
+          flex-direction: column;
+          gap: 40px;
+        }
+        @media(max-width:860px){ .ct-left { border-right: none; border-bottom: 1px solid #455; } }
+
+        .ct-info-title {
+          font-size: 11px; font-weight: 600;
+          letter-spacing: 0.18em; text-transform: uppercase;
+          color: #666; margin-bottom: 20px;
+        }
+
+        /* contact rows */
+        .ct-info-row {
+          display: flex; gap: 14px;
+          padding: 14px 0;
+          border-bottom: 1px solid #2a2a2a;
+        }
+        .ct-info-row:last-child { border-bottom: none; }
+        .ct-info-icon {
+          font-size: 13px; color: ${ACCENT};
+          margin-top: 2px; flex-shrink: 0;
+        }
+        .ct-info-label {
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 10px; letter-spacing: 0.12em;
+          text-transform: uppercase; color: #888;
+          margin-bottom: 4px;
+        }
+        .ct-info-value {
+          font-size: 13px; font-weight: 500;
+          color: #ffffff; margin-bottom: 2px;
+        }
+        .ct-info-note { font-size: 11px; color: #888; }
+
+        /* socials */
+        .ct-socials { display: flex; gap: 8px; flex-wrap: wrap; }
+        .ct-social-link {
+          display: flex; align-items: center; gap: 8px;
+          padding: 9px 14px;
+          border: 1px solid #404040;
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 11px; letter-spacing: 0.08em;
+          color: #b0b0b0; text-decoration: none;
+          transition: color .15s, border-color .15s;
+        }
+        .ct-social-link:hover { color: ${ACCENT}; border-color: #666; }
+        .ct-social-link svg { font-size: 13px; }
+
+        /* status badge */
+        .ct-status-badge {
+          display: flex; align-items: center; gap: 8px;
+          font-size: 12px; color: #b0b0b0;
+          font-family: 'IBM Plex Mono', monospace;
+          letter-spacing: 0.08em;
+        }
+        .ct-status-dot {
+          width: 6px; height: 6px; border-radius: 50%;
+          background: ${ACCENT};
+          box-shadow: 0 0 8px ${ACCENT};
+          animation: ct-pulse 2s ease-in-out infinite;
+        }
+        @keyframes ct-pulse {
+          0%,100% { opacity:1; } 50% { opacity:.4; }
+        }
+
+        /* ── RIGHT: FORM ── */
+        .ct-form-wrap { padding: 40px 48px; }
+        @media(max-width:640px){ .ct-form-wrap { padding: 28px 20px; } }
+
+        .cf-grid-2 {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 20px;
+          margin-bottom: 20px;
+        }
+        @media(max-width:580px){ .cf-grid-2 { grid-template-columns: 1fr; } }
+
+        .cf-field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+        .cf-field:last-of-type { margin-bottom: 0; }
+
+        .cf-label {
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 10px; letter-spacing: 0.16em;
+          text-transform: uppercase; color: #b0b0b0;
+        }
+        .cf-req { color: ${ACCENT}; }
+
+        .cf-input {
+          background: transparent;
+          border: 1px solid #404040;
+          color: #ffffff;
+          font-family: 'Epilogue', sans-serif;
+          font-size: 14px;
+          padding: 12px 16px;
+          outline: none;
+          transition: border-color .2s;
+          width: 100%;
+        }
+        .cf-input::placeholder { color: #666; }
+        .cf-input:focus { border-color: ${ACCENT}; }
+        .cf-textarea { resize: vertical; min-height: 120px; }
+
+        .cf-submit {
+          margin-top: 28px;
+          display: flex; align-items: center; gap: 10px;
+          padding: 14px 28px;
+          background: ${ACCENT}; color: #0b0b0b;
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 11px; font-weight: 500;
+          letter-spacing: 0.12em; text-transform: uppercase;
+          border: none; cursor: pointer;
+          transition: opacity .2s, transform .2s;
+        }
+        .cf-submit:hover:not(:disabled) { opacity: .85; transform: translateY(-1px); }
+        .cf-submit:disabled { opacity: .4; cursor: not-allowed; }
+
+        .cf-error {
+          margin-top: 16px;
+          padding: 12px 16px;
+          border: 1px solid #c0392b;
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 11px; letter-spacing: 0.08em;
+          color: #ff6b6b;
+          background: rgba(192,57,43,0.1);
+        }
+
+        /* ── SUCCESS OVERLAY ── */
+        .ct-success-overlay {
+          position: fixed; inset: 0;
+          background: rgba(11,11,11,0.95);
+          display: flex; align-items: center; justify-content: center;
+          z-index: 50; padding: 20px;
+          animation: ct-fade-in .25s ease;
+        }
+        @keyframes ct-fade-in { from { opacity:0; } to { opacity:1; } }
+
+        .ct-success-box {
+          background: #1a1a1a;
+          border: 1px solid #404040;
+          padding: 56px 48px;
+          max-width: 440px; width: 100%;
+          text-align: center;
+          animation: ct-slide-up .3s ease;
+        }
+        @keyframes ct-slide-up {
+          from { opacity:0; transform: translateY(16px); }
+          to   { opacity:1; transform: translateY(0); }
+        }
+        .ct-check-wrap {
+          width: 48px; height: 48px;
+          border: 1px solid ${ACCENT};
+          display: flex; align-items: center; justify-content: center;
+          color: ${ACCENT}; font-size: 18px;
+          margin: 0 auto 28px;
+        }
+        .ct-success-title {
+          font-size: 20px; font-weight: 700;
+          color: #ffffff; margin-bottom: 12px;
+        }
+        .ct-success-body {
+          font-size: 13px; color: #b0b0b0;
+          line-height: 1.75; margin-bottom: 32px;
+        }
+        .ct-success-btn {
+          padding: 11px 28px;
+          background: transparent;
+          border: 1px solid #404040;
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 11px; letter-spacing: 0.12em;
+          text-transform: uppercase; color: #b0b0b0;
+          cursor: pointer;
+          transition: color .15s, border-color .15s;
+        }
+        .ct-success-btn:hover { color: ${ACCENT}; border-color: #666; }
+      `}</style>
+
+      <section id="contact" className="ct-root">
+        <div className="ct-inner">
+
+          {/* Header */}
+          <div className="ct-eyebrow">
+            <div className="ct-eyebrow-line" />
+            <span className="ct-eyebrow-text">Contact</span>
+          </div>
+          <h2 className="ct-title">Let's <span>talk.</span></h2>
+          <p className="ct-subtitle">
+            Have a project in mind or want to explore a collaboration? Send a message — I read every one.
+          </p>
+
+          {/* Panel */}
+          <div className="ct-grid">
+
+            {/* Left */}
+            <div className="ct-left">
+              <div>
+                <div className="ct-info-title">Contact Info</div>
+                {CONTACT_INFO.map(c => (
+                  <div className="ct-info-row" key={c.label}>
+                    <span className="ct-info-icon">{c.icon}</span>
                     <div>
-                      <h4 className="text-white font-semibold group-hover:text-blue-300 transition-colors">
-                        {item.title}
-                      </h4>
-                      <p className="text-gray-300">{item.value}</p>
-                      <p className="text-gray-400 text-sm">{item.description}</p>
+                      <div className="ct-info-label">{c.label}</div>
+                      <div className="ct-info-value">{c.value}</div>
+                      <div className="ct-info-note">{c.note}</div>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
 
-              {/* Enhanced Social Links */}
               <div>
-                <motion.h4 
-                  className="text-white font-semibold mb-4"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 1.4 }}
-                >
-                  Follow Me
-                </motion.h4>
-                <div className="flex space-x-3">
-                  {socialLinks.map((social, index) => (
-                    <motion.a
-                      key={social.name}
-                      href={social.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`p-3 bg-white/10 rounded-lg text-white transition-all duration-300 ${social.color} backdrop-blur-sm border border-white/10`}
-                      whileHover={{ 
-                        scale: 1.15, 
-                        y: -3,
-                        rotate: 5,
-                        transition: { type: "spring", stiffness: 400 }
-                      }}
-                      whileTap={{ scale: 0.9 }}
-                      initial={{ opacity: 0, scale: 0, y: 20 }}
-                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                      transition={{ 
-                        delay: 1.4 + index * 0.1,
-                        type: "spring",
-                        stiffness: 200
-                      }}
-                    >
-                      {social.icon}
-                    </motion.a>
+                <div className="ct-info-title">Elsewhere</div>
+                <div className="ct-socials">
+                  {SOCIALS.map(s => (
+                    <a key={s.label} href={s.url} target="_blank" rel="noopener noreferrer" className="ct-social-link">
+                      {s.icon}{s.label}
+                    </a>
                   ))}
                 </div>
               </div>
-            </motion.div>
 
-            {/* Enhanced Quick Stats */}
-            <motion.div
-              className="bg-gradient-to-br from-blue-500/20 to-purple-600/20 backdrop-blur-sm border border-blue-400/30 rounded-2xl p-6 text-center"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.6, type: "spring" }}
-              whileHover={{
-                scale: 1.02,
-                boxShadow: "0 15px 30px rgba(59, 130, 246, 0.2)",
-                transition: { duration: 0.3 }
-              }}
-            >
-              <motion.h4 
-                className="text-white font-bold mb-2"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.7 }}
-              >
-                Quick Response
-              </motion.h4>
-              <motion.p 
-                className="text-gray-300 text-sm mb-4"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.8 }}
-              >
-                Typically replies within 2 hours
-              </motion.p>
-              <div className="flex justify-center space-x-2">
-                {[1, 2, 3].map((dot) => (
-                  <motion.div
-                    key={dot}
-                    className="w-2 h-2 bg-green-400 rounded-full"
-                    animate={{ 
-                      scale: [1, 1.5, 1],
-                      opacity: [0.7, 1, 0.7]
-                    }}
-                    transition={{ 
-                      duration: 2, 
-                      repeat: Infinity, 
-                      delay: dot * 0.3,
-                      ease: "easeInOut"
-                    }}
-                  />
-                ))}
+              <div className="ct-status-badge">
+                <div className="ct-status-dot" />
+                Available for new projects
               </div>
-            </motion.div>
-          </motion.div>
+            </div>
 
-          {/* Contact Form - Static (no animations that cause re-renders) */}
-          <ContactForm 
-            onSubmit={handleSubmit}
-            isSubmitting={isSubmitting}
-            status={status}
-            formData={formData}
-            handleChange={handleChange}
-          />
+            {/* Right: Form */}
+            <div className="ct-form-wrap">
+              <form onSubmit={handleSubmit} noValidate>
+                <div className="cf-grid-2">
+                  <Field label="Name"    name="name"    value={formData.name}    onChange={handleChange} />
+                  <Field label="Email"   name="email"   type="email" value={formData.email}   onChange={handleChange} />
+                </div>
+                <Field label="Subject" name="subject" value={formData.subject} onChange={handleChange} />
+                <Field label="Message" name="message" textarea value={formData.message} onChange={handleChange} />
+
+                <button type="submit" disabled={status === 'sending'} className="cf-submit">
+                  <FaPaperPlane />
+                  {status === 'sending' ? 'Sending…' : 'Send Message'}
+                </button>
+
+                {status === 'error' && (
+                  <div className="cf-error">Something went wrong. Please try again.</div>
+                )}
+              </form>
+            </div>
+          </div>
+
         </div>
-      </motion.div>
+      </section>
 
-      {/* Enhanced Success Modal */}
-      <AnimatePresence>
-        {showModal && (
-          <motion.div
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <motion.div
-              className="bg-gradient-to-br from-gray-900 to-black border border-white/10 rounded-2xl p-8 shadow-2xl max-w-md w-full text-center"
-              initial={{ scale: 0, opacity: 0, rotate: -10 }}
-              animate={{ scale: 1, opacity: 1, rotate: 0 }}
-              exit={{ scale: 0, opacity: 0, rotate: 10 }}
-              transition={{ 
-                type: "spring", 
-                damping: 25,
-                stiffness: 200
-              }}
-            >
-              <motion.div
-                className="w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6"
-                initial={{ scale: 0, rotate: -180 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{ 
-                  delay: 0.2, 
-                  type: "spring",
-                  stiffness: 200
-                }}
-              >
-                <FaCheck className="text-3xl text-white" />
-              </motion.div>
-              
-              <motion.h3
-                className="text-2xl font-bold text-white mb-4"
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.3, type: "spring" }}
-              >
-                Message Sent Successfully!
-              </motion.h3>
-              
-              <motion.p
-                className="text-gray-300 mb-6 leading-relaxed"
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.4, type: "spring" }}
-              >
-                Thanks for reaching out! I've received your message and will get back to you within 24 hours. 
-                Looking forward to connecting with you!
-              </motion.p>
-
-              <motion.button
-                onClick={() => setShowModal(false)}
-                className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg font-semibold hover:shadow-2xl transition-all duration-300"
-                whileHover={{ 
-                  scale: 1.05,
-                  boxShadow: "0 10px 25px rgba(59, 130, 246, 0.4)",
-                  transition: { type: "spring", stiffness: 400 }
-                }}
-                whileTap={{ scale: 0.95 }}
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.5, type: "spring" }}
-              >
-                Awesome, Thanks!
-              </motion.button>
-
-              {/* Enhanced Floating particles in modal */}
-              <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-2xl">
-                {[1, 2, 3, 4, 5, 6].map((i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute w-2 h-2 bg-green-400 rounded-full"
-                    style={{
-                      left: `${15 + i * 15}%`,
-                      top: `${20 + (i % 3) * 20}%`,
-                    }}
-                    animate={{
-                      y: [0, -15, 0],
-                      x: [0, Math.sin(i) * 10, 0],
-                      opacity: [0, 1, 0],
-                      scale: [0, 1, 0],
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      delay: i * 0.3,
-                      ease: "easeInOut",
-                    }}
-                  />
-                ))}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </section>
+      {/* Success overlay */}
+      {status === 'success' && (
+        <div className="ct-success-overlay" onClick={() => setStatus('')}>
+          <div className="ct-success-box" onClick={e => e.stopPropagation()}>
+            <div className="ct-check-wrap"><FaCheck /></div>
+            <div className="ct-success-title">Message sent.</div>
+            <p className="ct-success-body">
+              Thanks for reaching out. I'll get back to you within 24 hours.
+            </p>
+            <button className="ct-success-btn" onClick={() => setStatus('')}>Close</button>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
