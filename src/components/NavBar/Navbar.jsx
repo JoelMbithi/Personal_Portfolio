@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiMoon, FiSun, FiMenu, FiX } from 'react-icons/fi';
-import logo from "../../assets/logo2.svg";
+import logo from "../../assets/logo3.png";
 
 export const Navbar = ({ darkMode, setDarkMode }) => {
   const [isOpen, setIsOpen] = useState(false);
