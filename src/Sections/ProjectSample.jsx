@@ -180,7 +180,8 @@ export const ProjectSample = () => {
           opacity: 0;
           animation: proj-cell-in .45s ease forwards;
         }
-        .proj-card:hover { background: #1a1a1a; }
+        .proj-card:hover { background: rgba(10, 25, 35, 0.7);
+  backdrop-filter: blur(4px);; }
 
         /* image */
         .proj-img-wrap {
@@ -210,7 +211,8 @@ export const ProjectSample = () => {
         .proj-icon-link {
           width: 36px; height: 36px;
           border: 1px solid #404040;
-          background: #1a1a1a;
+          background: rgba(10, 25, 35, 0.7);
+  backdrop-filter: blur(4px);;
           display: flex; align-items: center; justify-content: center;
           color: #b0b0b0; text-decoration: none;
           transition: color .2s, border-color .2s;

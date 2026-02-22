@@ -96,7 +96,8 @@ const Skills = () => {
           opacity: 0;
           animation: sg-cell-in .45s ease forwards;
         }
-        .sg-cell:hover { background: #1a1a1a; }
+        .sg-cell:hover { background: rgba(10, 25, 35, 0.7);
+  backdrop-filter: blur(4px);; }
 
         /* ── ICON ── */
         .sg-icon {

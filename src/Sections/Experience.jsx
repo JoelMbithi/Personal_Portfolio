@@ -117,8 +117,15 @@ export const Experience = () => {
           position: relative;
         }
         .exp-nav-item:last-child { border-bottom: none; }
-        .exp-nav-item:hover { background: #1a1a1a; }
-        .exp-nav-item.active { background: #1a1a1a; }
+        .exp-nav-item:hover { 
+  background: rgba(10, 25, 35, 0.7);
+  backdrop-filter: blur(4px);
+}
+.exp-nav-item.active { 
+  background: rgba(10, 25, 35, 0.8);
+  backdrop-filter: blur(4px);
+  border-left: 2px solid #4ade80;
+}
         .exp-nav-item.active::before {
           content: '';
           position: absolute;

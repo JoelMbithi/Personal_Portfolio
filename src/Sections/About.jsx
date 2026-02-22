@@ -413,7 +413,8 @@ export const About = () => {
         .photo-placeholder {
           width: 80px;
           height: 80px;
-          background: #1a1a1a;
+          background: rgba(10, 25, 35, 0.7);
+  backdrop-filter: blur(4px);;
           display: flex;
           align-items: center;
           justify-content: center;

@@ -212,7 +212,8 @@ export const Hero = () => {
         .hero-tag {
           position: absolute;
           bottom: -20px; left: -16px;
-          background: #1a1a1a;
+          background: rgba(10, 25, 35, 0.7);
+  backdrop-filter: blur(4px);;
           border: 1px solid #404040;
           padding: 8px 14px;
           font-family: 'IBM Plex Mono', monospace;

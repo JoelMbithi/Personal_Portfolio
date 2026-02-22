@@ -247,7 +247,8 @@ export const Contact = () => {
         @keyframes ct-fade-in { from { opacity:0; } to { opacity:1; } }
 
         .ct-success-box {
-          background: #1a1a1a;
+          background: rgba(10, 25, 35, 0.7);
+  backdrop-filter: blur(4px);;
           border: 1px solid #404040;
           padding: 56px 48px;
           max-width: 440px; width: 100%;

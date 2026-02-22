@@ -116,7 +116,8 @@ const Services = () => {
           position: relative;
           overflow: hidden;
         }
-        .sv-card:hover { background: #1a1a1a; }
+        .sv-card:hover {background: rgba(10, 25, 35, 0.7);
+  backdrop-filter: blur(4px);}
         .sv-card::after {
           content: '';
           position: absolute;
