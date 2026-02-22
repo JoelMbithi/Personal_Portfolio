@@ -45,7 +45,7 @@ export const Navbar = () => {
           animation: nav-drop .5s ease both;
         }
         .nav-root.scrolled {
-          border-bottom-color: rgba(200, 240, 77, 0.3);
+          border-bottom-color: #455;
           background: rgba(8, 20, 30, 0.85);
           box-shadow: 0 4px 30px rgba(0, 20, 30, 0.5);
         }
