@@ -10,10 +10,12 @@ import Employee        from '../assets/Employee.jpeg';
 import posSystemImg    from '../assets/POS.png';
 import cityConnectImg  from '../assets/city-connect.jpeg';
 import socialSphereImg from '../assets/social-media.jpeg';
+import KazilinkImg     from '../assets/kazilink.jpeg';
+import AutorentproImg  from '../assets/autorentpro.png';
+import ImaraSaccoImg   from '../assets/imara-sacco.jpeg';
 
 /* ─── DATA ───────────────────────────────────────────── */
 const PROJECTS = [
-  
   { index:'01', title:'Scribe Blog',   desc:'Clean Django blog platform for writing and managing posts with a minimal editorial interface.',                   tags:['Python','Django','Tailwind'],              live:'',                                        github:'https://github.com/JoelMbithi/scribe-django.git',     image:Blog,           featured:false },
   { index:'02', title:'Joe Website',   desc:'Freelance gig platform with features for managing jobs, clients, and payments end-to-end.',                       tags:['React','MongoDB','Tailwind'],              live:'https://full-stack-dev-jx3r.vercel.app/', github:'https://github.com/JoelMbithi/Joe-Gig-Web',           image:joeGigsImg,     featured:true  },
   { index:'03', title:'Build Estate',  desc:'Full-stack real estate reservation platform with property listings, filters, and booking flow.',                   tags:['React','Node.js','PostgreSQL','Tailwind'], live:'#',                                       github:'https://github.com/JoelMbithi/Build-Estate-Website', image:buildEstateImg,  featured:true  },
@@ -22,6 +24,9 @@ const PROJECTS = [
   { index:'06', title:'POS System',   desc:'Point-of-sale solution with inventory tracking, sales reports, and customer management.',                         tags:['React','TypeScript','Node.js','Laravel'],  live:'',                                        github:'https://github.com/JoelMbithi/ts-starter-kit',        image:posSystemImg,   featured:false },
   { index:'07', title:'CityConnect',  desc:'County-level networking platform connecting people and local businesses in a single hub.',                        tags:['React','Node.js','PostgreSQL','Tailwind'], live:'',                                        github:'https://github.com/JoelMbithi/ts-starter-kit',        image:cityConnectImg, featured:false },
   { index:'08', title:'SocialSphere', desc:'Modern social media platform for posting, reacting, and connecting with friends, built with TypeScript.',         tags:['React','TypeScript','Tailwind'],           live:'',                                        github:'https://github.com/JoelMbithi/ts-starter-kit',        image:socialSphereImg,featured:false },
+  { index:'09', title:'Kazilink',     desc:'Freelance marketplace connecting Kenyan freelancers with local clients, featuring secure payments and escrow.',    tags:['React','Node.js','prismaneon','Tailwind'],    live:'',                                        github:'https://github.com/JoelMbithi/KaziLink_Kenya.git',              image:KazilinkImg,    featured:true  },
+  { index:'10', title:'Autorentpro',  desc:'Car rental platform with vehicle listings, booking system, and automated payment processing.',                     tags:['React','Node.js','prismaneon','PostgreSQL','Tailwind','typescript'], live:'https://auto-rent-pro-car-hire-8qb8.vercel.app/',                                        github:'https://github.com/JoelMbithi/AutoRentPro-CarHire',           image:AutorentproImg, featured:true  },
+  { index:'11', title:'Imara Sacco',  desc:'Premium financial cooperative platform with member management, loan processing, and secure transactions.',          tags:['React','Node.js','PostgreSQL','Tailwind','Typescript'], live:'',                                        github:'https://github.com/JoelMbithi/Imara_Sacco',           image:ImaraSaccoImg,  featured:true  },
 ];
 
 const ALL_TAGS = [...new Set(PROJECTS.flatMap(p => p.tags))].sort();
