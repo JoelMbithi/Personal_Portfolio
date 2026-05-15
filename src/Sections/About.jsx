@@ -475,10 +475,10 @@ export const About = () => {
               </div>
 
               {/* Availability */}
-              <div className="availability">
+              {/* <div className="availability">
                 <div className="avail-dot" />
                 Available for freelance work
-              </div>
+              </div> */}
 
               {/* CTAs */}
               <div className="cta-row">
