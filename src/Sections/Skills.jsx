@@ -348,8 +348,12 @@ export const Skills = () => {
               What I <span>work with.</span>
             </h2>
             <p className="sk-subtitle">
-              A focused set of technologies I use to ship fast, clean, and maintainable software.
+             <strong>4+ years of building production-grade applications</strong> with real users. 
+  Every technology here has shipped code, solved client problems, and met deadlines  
+  not just looked good on a resume.
             </p>
+
+            
           </div>
 
           {/* Tabs */}

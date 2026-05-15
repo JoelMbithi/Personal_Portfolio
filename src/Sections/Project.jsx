@@ -491,7 +491,7 @@ export const Projects = () => {
           </div>
           <h2 className="pr-title">Things I've <span>built.</span></h2>
           <p className="pr-subtitle">
-            Real-world projects spanning e-commerce, SaaS, social platforms, and management tools — each built end-to-end.
+            Real-world projects spanning e-commerce, SaaS, social platforms, and management tools each built end-to-end.
           </p>
 
           {/* Meta row */}

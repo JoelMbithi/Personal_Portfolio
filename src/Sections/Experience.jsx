@@ -296,7 +296,7 @@ export const Experience = () => {
           </div>
           <h2 className="exp-title">Where I've <span>worked.</span></h2>
           <p className="exp-subtitle">
-            A record of the roles and projects that shaped how I think about building software.
+              Real problems, real teams, real solutions. The experiences that made me the developer I am today.
           </p>
 
           {/* Main panel */}

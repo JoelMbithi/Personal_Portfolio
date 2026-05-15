@@ -110,6 +110,7 @@ export const About = () => {
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+           @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@300;400;500&display=swap');
 
         /* ── BASE (no background - inherits from App) ── */
         .about-root {
@@ -150,7 +151,7 @@ export const About = () => {
 
         /* ── HEADLINE ── */
         .about-headline {
-          font-family: 'Syne', sans-serif;
+          font-family: 'Sora', sans-serif;
           font-size: clamp(42px, 6vw, 64px);
           font-weight: 800;
           line-height: 1;
@@ -461,7 +462,7 @@ export const About = () => {
                 even when they can't name them.
               </p>
               <p>
-                From backend logic in <strong>Node.js and PHP</strong> to reactive 
+                From backend logic in <strong>Node.js, Next.js and PHP</strong> to reactive 
                 frontends in <strong>React and TypeScript</strong>, I work across the 
                 full stack. Real projects, real constraints, real results.
               </p>

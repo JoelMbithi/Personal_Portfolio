@@ -87,13 +87,58 @@ const Services = () => {
           font-size: clamp(36px, 5vw, 64px);
           font-weight: 800; line-height: 1;
           letter-spacing: -0.03em; color: #ffffff;
-          margin-bottom: 16px;
+          margin-bottom: 24px;
         }
         .sv-title span { color: ${ACCENT}; }
-        .sv-subtitle {
-          font-size: 15px; color: #b0b0b0;
-          line-height: 1.7; max-width: 500px;
+        
+        /* ── OFFER SECTION ── */
+        .offer-wrapper {
           margin-bottom: 72px;
+        }
+        .offer-main {
+          font-size: 18px;
+          line-height: 1.6;
+          color: #e0e0e0;
+          margin-bottom: 20px;
+          font-weight: 500;
+          max-width: 800px;
+        }
+        .offer-main strong {
+          color: ${ACCENT};
+          font-weight: 700;
+        }
+        .offer-detail {
+          font-size: 15px;
+          line-height: 1.7;
+          color: #b0b0b0;
+          margin-bottom: 24px;
+          max-width: 700px;
+        }
+        .offer-detail strong {
+          color: #ffffff;
+          font-weight: 600;
+        }
+        .tech-stack {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+        .tech-pill {
+          background: rgba(74, 222, 128, 0.08);
+          border: 1px solid rgba(74, 222, 128, 0.2);
+          padding: 6px 14px;
+          border-radius: 30px;
+          font-size: 12px;
+          font-weight: 500;
+          color: ${ACCENT};
+          font-family: 'IBM Plex Mono', monospace;
+          letter-spacing: 0.02em;
+          transition: all 0.2s ease;
+        }
+        .tech-pill:hover {
+          background: rgba(74, 222, 128, 0.15);
+          border-color: rgba(74, 222, 128, 0.4);
+          transform: translateY(-1px);
         }
 
         /* ── GRID ── */
@@ -116,8 +161,10 @@ const Services = () => {
           position: relative;
           overflow: hidden;
         }
-        .sv-card:hover {background: rgba(10, 25, 35, 0.7);
-  backdrop-filter: blur(4px);}
+        .sv-card:hover {
+          background: rgba(10, 25, 35, 0.7);
+          backdrop-filter: blur(4px);
+        }
         .sv-card::after {
           content: '';
           position: absolute;
@@ -205,13 +252,35 @@ const Services = () => {
             <div className="sv-eyebrow-line" />
             <span className="sv-eyebrow-text">Services</span>
           </div>
+          
           <h2 className="sv-title">What I <span>offer.</span></h2>
-          <p className="sv-subtitle">
-            End-to-end web development and digital solutions — from crafting responsive
-            interfaces to deploying scalable applications that deliver real impact.
-          </p>
+          
+          {/* Updated Description Section */}
+          <div className="offer-wrapper">
+            <p className="offer-main">
+              <strong>End-to-end web development and digital solutions</strong> — from crafting 
+              responsive interfaces to deploying scalable applications that deliver real impact.
+            </p>
+            
+            <p className="offer-detail">
+              My toolkit includes <strong>React, TypeScript, Node.js, PHP, PostgreSQL, and MongoDB</strong>. 
+              Whether you need a dynamic frontend, a robust API, or a complete web application, 
+              I handle the full development lifecycle with clean, maintainable code.
+            </p>
+            
+            <div className="tech-stack">
+              <span className="tech-pill">React</span>
+              <span className="tech-pill">TypeScript</span>
+              <span className="tech-pill">Node.js</span>
+              <span className="tech-pill">PHP</span>
+              <span className="tech-pill">PostgreSQL</span>
+              <span className="tech-pill">MongoDB</span>
+              <span className="tech-pill">Tailwind CSS</span>
+              <span className="tech-pill">Next.js</span>
+            </div>
+          </div>
 
-          {/* Grid */}
+          {/* Services Grid */}
           <div className="sv-grid">
             {SERVICES.map((s) => (
               <div
@@ -228,7 +297,7 @@ const Services = () => {
             ))}
           </div>
 
-          {/* Bottom bar */}
+          {/* Bottom CTA */}
           <div className="sv-bottom">
             <p className="sv-bottom-text">
               <strong>Not sure what you need?</strong> Let's talk through your project
