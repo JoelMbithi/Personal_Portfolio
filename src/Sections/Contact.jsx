@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { FaPaperPlane, FaMapMarkerAlt, FaPhone, FaEnvelope, FaLinkedin, FaGithub, FaTwitter, FaCheck } from 'react-icons/fa';
+import { FaPaperPlane, FaMapMarkerAlt, FaPhone, FaEnvelope, FaLinkedin, FaGithub, FaTwitter, FaCheck,FaInstagram } from 'react-icons/fa';
 
 /* ─── DATA ───────────────────────────────────────────── */
 const CONTACT_INFO = [
@@ -11,7 +11,9 @@ const CONTACT_INFO = [
 const SOCIALS = [
   { icon: <FaLinkedin />, label: 'LinkedIn', url: 'https://linkedin.com/in/joelmbithi' },
   { icon: <FaGithub />,   label: 'GitHub',   url: 'https://github.com/joelmbithi' },
+  { icon: <FaInstagram />,  label: 'Instagram',  url: 'https://www.instagram.com/' },     
   { icon: <FaTwitter />,  label: 'Twitter',  url: 'https://twitter.com/joelmbithi' },
+  
 ];
 
 /* ─── FIELD ──────────────────────────────────────────── */

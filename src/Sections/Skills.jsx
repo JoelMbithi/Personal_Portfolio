@@ -2,12 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   FaHtml5, FaCss3Alt, FaJs, FaReact, FaNodeJs, FaPython,
-  FaGitAlt, FaDocker, FaFigma, FaCloud,
+  FaGitAlt, FaDocker, FaFigma, FaCloud, FaDatabase
 } from 'react-icons/fa';
 import {
   SiTailwindcss, SiNextdotjs, SiExpress, SiDjango, SiMongodb,
   SiPostgresql, SiFirebase, SiTypescript, SiRedis, SiVercel,
-  SiNetlify, SiJest, SiCypress,
+  SiNetlify, SiJest, SiCypress,SiSupabase 
 } from 'react-icons/si';
 
 /* ─── DATA ───────────────────────────────────────────── */
@@ -43,6 +43,8 @@ const CATEGORIES = [
       { name: 'MongoDB',    icon: <SiMongodb />,    level: 85, color: '#47a248' },
       { name: 'PostgreSQL', icon: <SiPostgresql />, level: 83, color: '#336791' },
       { name: 'Firebase',   icon: <SiFirebase />,   level: 78, color: '#ffca28' },
+      { name: 'MySQL', icon: <FaDatabase />, level: 88, color: '#00758f' },
+      { name: 'Supabase',   icon: <SiSupabase />,   level: 76, color: '#3ecf8e' },
     ],
   },
   {
